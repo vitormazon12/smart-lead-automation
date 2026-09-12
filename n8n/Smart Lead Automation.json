@@ -1,0 +1,1039 @@
+{
+  "name": "Smart Lead Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5dc93c5-c2ec-4368-a051-05a3f4e152cf",
+              "name": "categoria",
+              "value": "dados",
+              "type": "string"
+            },
+            {
+              "id": "320d1f86-0e95-4720-bb56-c9d67a1012ba",
+              "name": "prioridade",
+              "value": "alta",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "0d459fbb-d86a-4cc4-960c-85bd1c3363be",
+      "name": "Classificar Lead de Dados"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9f076393-7c61-49ea-a0b3-04602e72ae93",
+              "name": "categoria",
+              "value": "geral",
+              "type": "string"
+            },
+            {
+              "id": "ea496f91-2279-4819-859e-20912645a956",
+              "name": "prioridade",
+              "value": "normal",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        672,
+        96
+      ],
+      "id": "b303d65c-a725-484a-8a4b-54510befbc48",
+      "name": "Classificar Lead Geral"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "34dfd4d4-a646-4f52-ab21-aa0615873d9e",
+              "leftValue": "={{ $json.Interesse }}",
+              "rightValue": "Análise de dados",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "be3844cb-2dc3-46ec-b0e3-f7ed5640e466",
+      "name": "É Lead de Dados?"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "acoes_lead",
+          "mode": "list",
+          "cachedResultName": "acoes_lead"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $json.lead_id }}",
+            "acao": "={{ $json.acao }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "acao",
+              "displayName": "acao",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "criado_em",
+              "displayName": "criado_em",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        2208,
+        0
+      ],
+      "id": "81d1da77-9122-4143-9032-b1dd74adc91f",
+      "name": "Registrar Ação Comercial",
+      "credentials": {
+        "postgres": {
+          "id": "Zz7rEO9BKxxOagDc",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f2732acb-4122-4e0a-87bc-af257f698c16",
+              "leftValue": "={{ $json.classificacao }}",
+              "rightValue": "quente",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1776,
+        0
+      ],
+      "id": "56252b7f-50b8-4248-aec9-411ed59410e0",
+      "name": "É Lead Prioritário?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d71dd7c6-aa31-4647-aea6-d267707c03ed",
+              "name": "status",
+              "value": "novo",
+              "type": "string"
+            },
+            {
+              "id": "084e60dc-c5a1-4ec1-926f-63a3f61adce1",
+              "name": "origem",
+              "value": "formulario_n8n",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "4f16c8ae-e3d3-41f2-a512-b82bb310fa63",
+      "name": "Enriquecer Dados do Lead"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        880,
+        0
+      ],
+      "id": "3bed6dbc-28e4-4e44-9b68-e83e6162aeec",
+      "name": "Unificar Classificação"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "leads",
+          "mode": "list",
+          "cachedResultName": "leads"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nome": "={{ $json.Nome }}",
+            "status": "={{ $json.status }}",
+            "mensagem": "={{ $json.Mensagem }}",
+            "email": "={{ $json.Email }}",
+            "empresa": "={{ $json.Empresa }}",
+            "interesse": "={{ $json.Interesse }}",
+            "origem": "={{ $json.origem }}",
+            "categoria": "={{ $json.categoria }}",
+            "prioridade": "={{ $json.prioridade }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "empresa",
+              "displayName": "empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "interesse",
+              "displayName": "interesse",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "origem",
+              "displayName": "origem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prioridade",
+              "displayName": "prioridade",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "criado_em",
+              "displayName": "criado_em",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1104,
+        0
+      ],
+      "id": "fddd636c-bec6-4acd-9744-f7ac640afbc9",
+      "name": "Registrar Lead",
+      "credentials": {
+        "postgres": {
+          "id": "Zz7rEO9BKxxOagDc",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=http://host.docker.internal:8000/leads/{{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1328,
+        0
+      ],
+      "id": "a9148f4e-a2d5-4775-95b7-620ee303d76b",
+      "name": "Calcular Score do Lead"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "leads",
+          "mode": "list",
+          "cachedResultName": "leads"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "score": "={{ $json.analise.score }}",
+            "classificacao": "={{ $json.analise.classificacao }}",
+            "id": "={{ $json.lead.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "empresa",
+              "displayName": "empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "interesse",
+              "displayName": "interesse",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "origem",
+              "displayName": "origem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prioridade",
+              "displayName": "prioridade",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "criado_em",
+              "displayName": "criado_em",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "classificacao",
+              "displayName": "classificacao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1552,
+        0
+      ],
+      "id": "8e3a27b2-dc2b-4b94-8ea3-d95bd9a764b5",
+      "name": "Atualizar Score e Classificação",
+      "credentials": {
+        "postgres": {
+          "id": "Zz7rEO9BKxxOagDc",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4f646faa-3edf-4efc-8fc0-4f268f83f2f8",
+              "name": "=lead_id",
+              "value": "={{ $json.id }}",
+              "type": "number"
+            },
+            {
+              "id": "f6634537-3a6a-47a0-b087-eef26293cd5a",
+              "name": "nome",
+              "value": "={{ $json.nome }}",
+              "type": "string"
+            },
+            {
+              "id": "f7e93c26-f946-46c3-a55f-60fe32e6e13a",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "84e064d9-ef74-490b-a5ee-c9b7f046c55d",
+              "name": "empresa",
+              "value": "={{ $json.empresa }}",
+              "type": "string"
+            },
+            {
+              "id": "e6647a31-a9ac-480f-bcf6-d1fc9bcb7ba2",
+              "name": "score",
+              "value": "={{ $json.score }}",
+              "type": "number"
+            },
+            {
+              "id": "cb96ce5b-af50-497d-a76b-b171c1861a99",
+              "name": "classificacao",
+              "value": "={{ $json.classificacao }}",
+              "type": "string"
+            },
+            {
+              "id": "2acdfece-60c7-43dd-9d6b-3644f650ebf2",
+              "name": "acao",
+              "value": "contato_prioritario",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2000,
+        -96
+      ],
+      "id": "1aab880e-a5fa-4591-9da5-e6affa531eb9",
+      "name": "Preparar Ação Prioritária"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9c47092-e895-45f9-bc00-fb6674e7bbae",
+              "name": "lead_id",
+              "value": "={{ $json.id}}",
+              "type": "number"
+            },
+            {
+              "id": "8f0f228d-41c0-458a-87dc-2b191593757d",
+              "name": "nome",
+              "value": "={{ $json.nome }}",
+              "type": "string"
+            },
+            {
+              "id": "860485d1-9c7a-4410-930f-d3882b42eee8",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "728799af-734b-416c-a11b-2e334d86e058",
+              "name": "empresa",
+              "value": "={{ $json.empresa }}",
+              "type": "string"
+            },
+            {
+              "id": "7bb535e9-0b79-441b-ad22-f59c5abc5618",
+              "name": "score",
+              "value": "={{ $json.score}}",
+              "type": "number"
+            },
+            {
+              "id": "366ec95f-95dc-4965-83e4-70ea0bfd33d1",
+              "name": "classificacao",
+              "value": "={{ $json.classificacao }}",
+              "type": "string"
+            },
+            {
+              "id": "3b4bc85c-1b64-4130-9353-61b4b3725805",
+              "name": "acao",
+              "value": "acompanhamento_normal",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2000,
+        96
+      ],
+      "id": "6c6021d9-0dd3-43be-a6f1-be89f15a5d24",
+      "name": "Preparar Ação Normal"
+    },
+    {
+      "parameters": {
+        "formTitle": "Solicitação de Contato",
+        "formDescription": "Preencha seus dados e conte brevemente como podemos ajudar.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nome",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Empresa"
+            },
+            {
+              "fieldLabel": "Interesse",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Automação de processos"
+                  },
+                  {
+                    "option": "Análise de dados"
+                  },
+                  {
+                    "option": "Dashboard / BI"
+                  },
+                  {
+                    "option": "Desenvolvimento de software"
+                  },
+                  {
+                    "option": "Outro"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Mensagem",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d0ec1ec3-2870-4aba-aa58-65fb3b25392b",
+      "name": "Receber Novo Lead",
+      "webhookId": "eb54bc3c-839f-412f-9739-7822e2a7ab05"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b3c6f287-d011-4ef8-8b36-5ba1526f169d",
+              "name": "lead_id",
+              "value": "={{ $json.lead_id }}",
+              "type": "number"
+            },
+            {
+              "id": "2826a740-b4bc-460d-a11c-191ffaaa2006",
+              "name": "acao",
+              "value": "={{ $json.acao }}",
+              "type": "string"
+            },
+            {
+              "id": "e560d5ec-5477-40ab-8a97-e7646302bba4",
+              "name": "status_acao",
+              "value": "={{ $json.status }}",
+              "type": "string"
+            },
+            {
+              "id": "081edd60-e22b-416b-a91a-3fda3775e112",
+              "name": "destino",
+              "value": "equipe_comercial",
+              "type": "string"
+            },
+            {
+              "id": "54ce3378-c275-43c9-af5b-679ddcb97b4f",
+              "name": "mensagem",
+              "value": "=Novo lead para acompanhamento.\nID: {{ $json.lead_id }}\nNome: {{ $('Atualizar Score e Classificação').item.json.nome }}\nScore: {{ $('Atualizar Score e Classificação').item.json.score }}\nClassificação: {{ $('Atualizar Score e Classificação').item.json.classificacao }}\nAção: {{ $json.acao }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2432,
+        0
+      ],
+      "id": "e42d85b7-7cf4-4303-8323-45f01125ece1",
+      "name": "Preparar Notificação Comercial"
+    },
+    {
+      "parameters": {
+        "fromEmail": "seu_email@exemplo.com",
+        "toEmail": "seu_email@exemplo.com",
+        "subject": "Smart Lead Automation - Novo Lead",
+        "emailFormat": "text",
+        "text": "={{ $json.mensagem }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2656,
+        0
+      ],
+      "id": "99a9b4da-8b50-4384-af9c-f2364dbd8906",
+      "name": "Enviar Notificação por E-mail",
+      "webhookId": "39c7572b-8517-4d0e-b24b-bc8fee7729ee",
+      "credentials": {
+        "smtp": {
+          "id": "hMk6TVRmGH8A9ca7",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "É Lead de Dados?": {
+      "main": [
+        [
+          {
+            "node": "Classificar Lead de Dados",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Classificar Lead Geral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classificar Lead de Dados": {
+      "main": [
+        [
+          {
+            "node": "Unificar Classificação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classificar Lead Geral": {
+      "main": [
+        [
+          {
+            "node": "Unificar Classificação",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "É Lead Prioritário?": {
+      "main": [
+        [
+          {
+            "node": "Preparar Ação Prioritária",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparar Ação Normal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enriquecer Dados do Lead": {
+      "main": [
+        [
+          {
+            "node": "É Lead de Dados?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unificar Classificação": {
+      "main": [
+        [
+          {
+            "node": "Registrar Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar Lead": {
+      "main": [
+        [
+          {
+            "node": "Calcular Score do Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular Score do Lead": {
+      "main": [
+        [
+          {
+            "node": "Atualizar Score e Classificação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualizar Score e Classificação": {
+      "main": [
+        [
+          {
+            "node": "É Lead Prioritário?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Ação Prioritária": {
+      "main": [
+        [
+          {
+            "node": "Registrar Ação Comercial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Receber Novo Lead": {
+      "main": [
+        [
+          {
+            "node": "Enriquecer Dados do Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Ação Normal": {
+      "main": [
+        [
+          {
+            "node": "Registrar Ação Comercial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar Ação Comercial": {
+      "main": [
+        [
+          {
+            "node": "Preparar Notificação Comercial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Notificação Comercial": {
+      "main": [
+        [
+          {
+            "node": "Enviar Notificação por E-mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d40da683-7e29-43b1-a22e-e95424bb4195",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bae076822a79fae1fdaaad54989fd28e8eee3d2fbc597a06b194e0a69d7e62ab"
+  },
+  "nodeGroups": [],
+  "id": "Zvt91zYCneLoWBLB",
+  "tags": []
+}
