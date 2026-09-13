@@ -48,9 +48,8 @@ Na arquitetura atual:
 - **n8n** e **PostgreSQL** são executados em containers Docker;
 - a API Python é executada localmente em um ambiente virtual `.venv`;
 - o n8n acessa a API Python pelo endereço `host.docker.internal`;
-- o Python acessa o PostgreSQL pela porta exposta no host.
-    - **Python → PostgreSQL** → `localhost:5433`
-    - **n8n → PostgreSQL** → `postgres:5432`
+- o Python acessa o PostgreSQL pela porta exposta no host;
+- o n8n acessa o PostgreSQL diretamente pela rede interna do Docker.
 
 ---
 
@@ -348,6 +347,9 @@ Ainda dentro de `python-service`:
 ```powershell
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
+> A opção `--host 0.0.0.0` é utilizada neste ambiente de desenvolvimento
+> para permitir que o container do n8n acesse a API executada no host.
+> Para outros ambientes, revise as regras de rede e exposição da API.
 
 Teste:
 
